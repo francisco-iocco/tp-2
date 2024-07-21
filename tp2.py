@@ -49,23 +49,24 @@ def menuEstudiantes(opcion, subOpcion):
 def registrar(baseDePerfiles,nuevoUsuario,tipoUsuario):
     if(tipoUsuario == 1):
         if(nuevoUsuario <= 7):
+            clearConsole()
+            print("MENU DE REGISTRO")
             email = input("Ingrese su email: ")
+            
             contrasena = input("ingrese su contraseña: ")
             baseDePerfiles[nuevoUsuario][0] = email
             baseDePerfiles[nuevoUsuario][1] = contrasena
             baseDePerfiles[nuevoUsuario][2] = "ACTIVO"
-            return baseDePerfiles
-        else:
             return baseDePerfiles
     elif(tipoUsuario == 2):
         if(nuevoUsuario <= 3):
+            clearConsole()
+            print("MENU DE REGISTRO")
             email = input("Ingrese su email: ")
             contrasena = input("ingrese su contraseña: ")
             baseDePerfiles[nuevoUsuario][0] = email
             baseDePerfiles[nuevoUsuario][1] = contrasena
             baseDePerfiles[nuevoUsuario][2] = "ACTIVO"
-            return baseDePerfiles
-        else:
             return baseDePerfiles
     
 def login(email,contrasena,baseDePerfiles):
@@ -112,19 +113,22 @@ while(inicio != "LOGIN" or (cantEstudiantesActivos <4 and cantModeradoresActivos
             clearConsole()
             tipoDeUsuarioARegistrar = int(input("1-Estudiante\n2-Moderador\nOpcion: "))
             if(tipoDeUsuarioARegistrar == 1):
-                baseDePerfiles = registrar(estudiantesIngreso,cantEstudiantesActivos,tipoDeUsuarioARegistrar)
-                if(estudiantesIngreso != baseDePerfiles):
+                if(cantEstudiantesActivos < 8):
                     estudiantesIngreso == registrar(estudiantesIngreso,cantEstudiantesActivos,tipoDeUsuarioARegistrar)
                     cantEstudiantesActivos += 1
                     clearConsole()
                     print("Usuario ingresado correctamente")
                 else:
-                    print("Cantidad Maxima de Alumnos")
+                    print("Cantidad maxima de alumnos alcanzada")
             elif(tipoDeUsuarioARegistrar == 2):
-                moderadorIngreso = registrar(moderadorIngreso,cantModeradoresActivos,tipoDeUsuarioARegistrar)
-                cantModeradoresActivos += 1
-                clearConsole()
-                print("Usuario ingresado correctamente")
+                if(cantModeradoresActivos < 4):
+                    moderadorIngreso = registrar(moderadorIngreso,cantModeradoresActivos,tipoDeUsuarioARegistrar)
+                    cantModeradoresActivos += 1
+                    clearConsole()
+                    print("Usuario ingresado correctamente")
+                else:
+                    clearConsole()
+                    print("Cantidad maxima de moderadores alcanzada")
             elif(tipoDeUsuarioARegistrar != 1 and tipoDeUsuarioARegistrar != 2):
                 tipoDeUsuarioARegistrar = 0
                 print("opcion no valida\n")
