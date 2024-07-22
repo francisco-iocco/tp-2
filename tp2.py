@@ -2,10 +2,11 @@
 import random
 import os
 matriz = [[random.randint(0,1) for _ in range(7)] for _ in range(7)]
-def clearConsole():
+def clearConsole(email = ""):
     if os.name in ('nt', 'dos'):  
         command = 'cls'
     os.system(command)
+    if(email): print("Bienvenido " + email + "!")
 estudiantesIngreso = [["Lucasmichelini@gmail.com","123","ACTIVO"],
                        ["franciscoiocco@gmail.com","123","ACTIVO"],
                        ["sebastiangonzales@gmail.com","123","ACTIVO"],
@@ -23,27 +24,51 @@ moderadorIngreso   = [["moderador1@gmail.com","123","ACTIVO"],
 cantEstudiantesActivos = 5
 cantModeradoresActivos = 2
 
-def menuEstudiantes(opcion, subOpcion):
-    match(opcion):
-        case 0:
-            print("1. Gestionar mi perfil")
-            print("2. Gestionar candidatos")
-            print("4. Reportes Estadísticos")
-        case 1:
-            print("1. Gestionar mi perfil")
-            print("\t a. Editar mis datos personales")
-            print("\t b. Eliminar mi perfil")
-            print("\t c. Volver")
-        case 2:
-            print("2. Gestionar candidatos")
-            print("\t a. Ver candidatos")
-            print("\t b. Reportar un candidato")
-            print("\t c. Volver")
-        case 4:
-            print("4. Reportes Estadísticos")
-            print("\t En Construcción")
-        case _:
+def menuEstudiantes():
+    clearConsole()
+    opcion = "0"
+    subOpcion = ""
+    prevOpcion = opcion
+    prevSubOpcion = subOpcion
+    while(opcion != "5"):
+        if(subOpcion == "c"): 
+            subOpcion = ""
+            opcion = "0"
+            clearConsole()
+        match(opcion):
+            case "0":
+                print("1. Gestionar mi perfil")
+                print("2. Gestionar candidatos")
+                print("4. Reportes Estadísticos")
+            case "1":
+                print("1. Gestionar mi perfil")
+                print("\t a. Editar mis datos personales")
+                print("\t b. Eliminar mi perfil")
+                print("\t c. Volver")
+            case "2":
+                print("2. Gestionar candidatos")
+                print("\t a. Ver candidatos")
+                print("\t b. Reportar un candidato")
+                print("\t c. Volver")
+            case "4":
+                print("4. Reportes Estadísticos")
+                print("En Construcción...")
+            case "5":
+                print("Gracias por usar nuestro programa!")
+        if(not(opcion.isdigit() and int(opcion) >= 0 and int(opcion) <= 5)):
+            clearConsole()
             print("Por favor, elija una opcion válida.")
+            opcion = prevOpcion
+        if(opcion != "0"): 
+            subOpcion = input("Ingrese su opción: ")
+            if(subOpcion != "a" and subOpcion != "b" and subOpcion != "c"):
+                clearConsole()
+                print("Por favor, elija una opcion válida.")
+                subOpcion = prevSubOpcion
+        else:
+            opcion = input("Ingrese su opción: ")
+            clearConsole()
+            
     
     
 def registrar(baseDePerfiles,nuevoUsuario,tipoUsuario):
@@ -152,10 +177,18 @@ while(contIntentos < 3 and estudianteActual == -1 and moderadorActual == -1):
         clearConsole()
         email = input("Ingrese su email: ")
         contrasena = input("ingrese su contraseña: ")
+
 if(estudianteActual != -1):
     print(estudianteActual)
+    opcion = 0
+    subOpcion = 0
+    anteriorOpcion = opcion
+    anteriorSubOpcion = subOpcion
+    while(True):
+        menuEstudiantes()
+
+        
 elif(moderadorActual != -1):
     print(moderadorActual)
 else:
     print("n")
-
