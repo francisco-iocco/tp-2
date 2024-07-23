@@ -1,12 +1,15 @@
 '''Lucas Michelini, Francisco Iocco, Sebastian Gonzales, Joaquin Benitez'''
 import random
 import os
+import datetime
+
 matriz = [[random.randint(0,1) for _ in range(7)] for _ in range(7)]
 def clearConsole(email = ""):
     if os.name in ('nt', 'dos'):  
         command = 'cls'
     os.system(command)
-    if(email): print("Bienvenido " + email + "!")
+    
+
 estudiantesIngreso = [["Lucasmichelini@gmail.com","123","ACTIVO"],
                        ["franciscoiocco@gmail.com","123","ACTIVO"],
                        ["sebastiangonzales@gmail.com","123","ACTIVO"],
@@ -23,53 +26,131 @@ moderadorIngreso   = [["moderador1@gmail.com","123","ACTIVO"],
                        ]
 cantEstudiantesActivos = 5
 cantModeradoresActivos = 2
+datosPersonales = [["Nombre: Lucas Michelini","Edad: ",(datetime.now() - datetime.fromisoformat("2005-06-04")).days // 365,"Sexo: M","Biografia: Rellenar","Hobbies: Progamacion competitiva,gimanasio,leer"],
+                   ["Nombre: Francisco Iocco","Edad: ",(datetime.now() - datetime.fromisoformat("2006-01-02")).days // 365,"Sexo: M","Biografia: Rellenar","Hobbies: Rellenar Hobbies"],
+                   ["Nombre: Francisco Iocco","Edad: ",(datetime.now() - datetime.fromisoformat("2006-01-02")).days // 365,"Sexo: M","Biografia: Rellenar","Hobbies: Rellenar Hobbies"],
+                   ["Nombre: Francisco Iocco","Edad: ",(datetime.now() - datetime.fromisoformat("2006-01-02")).days // 365,"Sexo: M","Biografia: Rellenar","Hobbies: Rellenar Hobbies"],
+                   ["","","","",""],
+                   ["","","","",""],
+                   ["","","","",""],
+                   ["","","","",""]
+                   ]
 
-def menuEstudiantes():
-    clearConsole()
-    opcion = "0"
-    subOpcion = ""
-    prevOpcion = opcion
-    prevSubOpcion = subOpcion
-    while(opcion != "5"):
-        if(subOpcion == "c"): 
-            subOpcion = ""
-            opcion = "0"
-            clearConsole()
-        match(opcion):
-            case "0":
-                print("1. Gestionar mi perfil")
-                print("2. Gestionar candidatos")
-                print("4. Reportes Estadísticos")
-            case "1":
-                print("1. Gestionar mi perfil")
-                print("\t a. Editar mis datos personales")
-                print("\t b. Eliminar mi perfil")
-                print("\t c. Volver")
-            case "2":
-                print("2. Gestionar candidatos")
-                print("\t a. Ver candidatos")
-                print("\t b. Reportar un candidato")
-                print("\t c. Volver")
-            case "4":
-                print("4. Reportes Estadísticos")
-                print("En Construcción...")
-            case "5":
-                print("Gracias por usar nuestro programa!")
-        if(not(opcion.isdigit() and int(opcion) >= 0 and int(opcion) <= 5)):
-            clearConsole()
-            print("Por favor, elija una opcion válida.")
-            opcion = prevOpcion
-        if(opcion != "0"): 
-            subOpcion = input("Ingrese su opción: ")
-            if(subOpcion != "a" and subOpcion != "b" and subOpcion != "c"):
-                clearConsole()
-                print("Por favor, elija una opcion válida.")
-                subOpcion = prevSubOpcion
-        else:
-            opcion = input("Ingrese su opción: ")
-            clearConsole()
-            
+def editarDatos():
+    '''por hacer'''
     
+def menuPrincipal(estudiante):
+    print("\t",estudiante)
+    print("MENU PRINCIPAL\n")
+    print("1-Gestionar Perfil")
+    print("2-Gestionar Canditos")
+    print("3-Matcheos")
+    print("4-Reportes estadisticos")
+    print("0-Salir")
+    
+
+def menu1(estudiante):
+    print("\t",estudiante)
+    print("1-Gestionar Perfil")
+    print("\ta.Editar mis datos personales")
+    print("\tb.Eliminar mi perfil")
+    print("\tc.volver")
+    
+
+def menu2(estudiante):
+    print("\t",estudiante)
+    print("2-Gestionar candidatos")
+    print("\ta. Ver candidatos")
+    print("\tb. Reportar un candidato")
+    print("\tc. Volver")
+    
+
+def menu3(estudiante):
+    print("\t",estudiante)
+    print("3-Matcheos")
+    print("\ta. Ver matcheos")
+    print("\tb. Eliminar un matcheo")
+    print("\tc. Volver")
+    
+
+def menu4(estudiante):
+    print("\t",estudiante)
+    print("4-Reportes estadisticos")
+    print("")
+    
+ 
+def cartel():
+    print("En construccion\n")
+
+def subMenu1(estudiante):
+    clearConsole(estudiante)
+    opc1 = ""
+    while(opc1 != "c"):
+        menu3()
+        opc1 = input("\nIngrese su opción: ")
+        if(opc1 != "a" and opc1 != "b" and opc1 !="c"):
+            clearConsole()
+            print("Opción invalida - Ingrese su opcion nuevamente\n")
+        clearConsole()
+        match opc1:
+            case "a": 
+                datosPersonales = editarDatos(estudiante, datosPersonales)
+            case "b": cartel()
+            
+def subMenu2(estudiante):
+    clearConsole()
+    opc2 = ""
+    while(opc2 != "c"):
+        menu3()
+        opc2 = input("\nIngrese su opción: ")
+        if(opc2 != "a" and opc2 != "b" and opc2 !="c"):
+            clearConsole()
+            print("Opción invalida - Ingrese su opcion nuevamente\n")
+        clearConsole()
+        match opc2:
+            case "a": cartel()
+            case "b": cartel()
+def subMenu3(estudiante):
+    clearConsole()
+    opc3 = ""
+    while(opc3 != "c"):
+        menu3(estudiante)
+        opc3 = input("\nIngrese su opción: ")
+        if(opc3 != "a" and opc3 != "b" and opc3 !="c"):
+            clearConsole()
+            print("Opción invalida - Ingrese su opcion nuevamente\n")
+        clearConsole()
+        match opc3:
+            case "a": cartel()
+            case "b": cartel()
+            
+def subMenu4(estudiante):
+    clearConsole()
+    cartel()
+                
+def menuIterativo(estudiante):
+    opc = ""
+    clearConsole()
+    while(opc != '0'):
+        menuPrincipal(estudiante)
+        opc = input("\nIngrese su opción: ")
+        esDigito = opc.isdigit()
+        if(not(esDigito) or not(int(opc) >= 0 and int(opc) <= 4)):
+            clearConsole()
+            print("\nPor favor, ingrese un opción valida.\n")
+        else:
+            match int(opc):
+                case 1:
+                    subMenu1(estudiante)
+                case 2:
+                    subMenu2(estudiante)
+                case 3:
+                    subMenu3(estudiante)
+                case 4:
+                    subMenu4(estudiante)
+                case 0:
+                    clearConsole()
+                    print("Gracias por usar nuestro programa!")
     
 def registrar(baseDePerfiles,nuevoUsuario,tipoUsuario):
     if(tipoUsuario == 1):
@@ -179,13 +260,8 @@ while(contIntentos < 3 and estudianteActual == -1 and moderadorActual == -1):
         contrasena = input("ingrese su contraseña: ")
 
 if(estudianteActual != -1):
-    print(estudianteActual)
-    opcion = 0
-    subOpcion = 0
-    anteriorOpcion = opcion
-    anteriorSubOpcion = subOpcion
-    while(True):
-        menuEstudiantes()
+    menuIterativo(estudianteActual)
+
 
         
 elif(moderadorActual != -1):
