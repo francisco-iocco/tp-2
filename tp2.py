@@ -10,7 +10,7 @@ def clearConsole(email = ""):
     os.system(command)
     
 
-estudiantesIngreso = [["Lucasmichelini@gmail.com","123","ACTIVO"],
+estudiantesIngreso = [["lucas","123","ACTIVO"],
                        ["franciscoiocco@gmail.com","123","ACTIVO"],
                        ["sebastiangonzales@gmail.com","123","ACTIVO"],
                        ["joaquinbenitez@gmail.com","123","ACTIVO"],
@@ -26,18 +26,42 @@ moderadorIngreso   = [["moderador1@gmail.com","123","ACTIVO"],
                        ]
 cantEstudiantesActivos = 5
 cantModeradoresActivos = 2
-datosPersonales = [["Nombre: Lucas Michelini","Edad: ",(datetime.now() - datetime.fromisoformat("2005-06-04")).days // 365,"Sexo: M","Biografia: Rellenar","Hobbies: Progamacion competitiva,gimanasio,leer"],
-                   ["Nombre: Francisco Iocco","Edad: ",(datetime.now() - datetime.fromisoformat("2006-01-02")).days // 365,"Sexo: M","Biografia: Rellenar","Hobbies: Rellenar Hobbies"],
-                   ["Nombre: Sebastian Gonzales","Edad: ",(datetime.now() - datetime.fromisoformat("2006-01-02")).days // 365,"Sexo: M","Biografia: Rellenar","Hobbies: Rellenar Hobbies"],
-                   ["Nombre: Joaquin Benitez","Edad: ",(datetime.now() - datetime.fromisoformat("2006-01-02")).days // 365,"Sexo: M","Biografia: Rellenar","Hobbies: Rellenar Hobbies"],
+datosPersonales = [["Lucas Michelini","2005-06-04","M","Rellenar","Progamacion competitiva,gimanasio,leer"],
+                   ["Francisco Iocco","15","M","Rellenar","Rellenar"],
+                   ["Sebastian Gonzales","14","M","Rellenar","Rellenar"],
+                   ["Joaquin Benitez","29","M","Rellenar","Rellenar"],
                    ["","","","",""],
                    ["","","","",""],
                    ["","","","",""],
                    ["","","","",""]
                    ]
 
-def editarDatos():
-    '''por hacer'''
+def editarDatos(x,datos):
+    for i in range(5):
+        print(datos[x][i])
+    datoCambiar = -1         
+    while(int(datoCambiar) != 0):
+        #imprime el submenu de a-editar datos personales
+        print("\nQue dato quiere cambiar?\n\t1-Nombre\n\t2-Edad\n\t3-Sexo\n\t4-Biografia\n\t5-Hobbies\n\t(0)-salir")
+        datoCambiar = input("Ingrese una opción: ")
+        match int(datoCambiar):
+            case 1:
+                nuevoNombre = input("\nIngrese su nuevo nombre: ")
+                datos[x][0] = nuevoNombre
+            case 2:
+                nuevaEdad = input("ingrese su nueva edad: ")
+                datos[x][1] = nuevaEdad
+            case 3:
+                nuevoSexo = input("ingrese su nuevo sexo: ")
+                datos[x][1] = nuevoSexo
+            case 4:
+                nuevaBiografia = input("ingrese su nueva biografia: ")
+                datos[x][1] = nuevaBiografia
+            case 5:
+                nuevosHobbies = input("ingrese sus nuevo hobbies: ")
+                datos[x][1] = nuevosHobbies
+    return datos
+        
     
 def menuPrincipal(x,estudiante):
     print("\t",estudiante[x][0])
@@ -108,7 +132,7 @@ def subMenu1(usuario,datosPersonales):
             print("Opción invalida - Ingrese su opcion nuevamente\n")
         match opc1:
             case "a": 
-                datosPersonales = editarDatos(usuario,datosPersonales, datosPersonales)
+                datosPersonales = editarDatos(usuario,datosPersonales)
             case "b": 
                 cartel()
             
