@@ -31,7 +31,29 @@ datosPersonales = [["Lucas Michelini","2005-06-04","M","Rellenar","Progamacion c
                    ["","","","",""],
                    ["","","","",""],
                    ["","","","",""]]
-
+def verCandidatos(datos,cant):
+    for i in range(cant):
+        print("-----Estudiante",i,"------")
+        for j in range(5):
+            print(datos[i][j])
+    matcheo = ""
+    while matcheo != "NO":
+        matcheo = input("¿Quieres dar matcheo? (SI/NO): ")
+        if(matcheo != "SI" and matcheo != "NO"):
+            clearConsole()
+            for i in range(cant):
+                print("-----Estudiante",i,"------")
+                for j in range(5):
+                    print(datos[i][j])
+            print("Opcion inválida.")
+        else:
+            clearConsole()
+            meGusta = input("¿Quien te gusta? (nombre y apellido): ")
+            for i in range(cant):
+                if(datos[i][0] == meGusta):
+                    '''POR HACER'''
+            
+            
 def editarDatos(x,datos):
     for i in range(5):
         if(datos[x][i]): print("-", datos[x][i])
