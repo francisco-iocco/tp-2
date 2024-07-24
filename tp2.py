@@ -35,13 +35,34 @@ datosPersonales = [["Lucas Michelini","2005-06-04","M","Rellenar","Progamacion c
                    ["","","","",""],
                    ["","","","",""]
                    ]
-
+def verCandidatos(datos,cant):
+    for i in range(cant):
+        print("-----Estudiante",i,"------")
+        for j in range(5):
+            print(datos[i][j])
+    matcheo = ""
+    while matcheo != "NO":
+        matcheo = input("¿Quieres dar matcheo? (SI/NO): ")
+        if(matcheo != "SI" and matcheo != "NO"):
+            clearConsole()
+            for i in range(cant):
+                print("-----Estudiante",i,"------")
+                for j in range(5):
+                    print(datos[i][j])
+            print("Opcion inválida.")
+        else:
+            clearConsole()
+            meGusta = input("¿Quien te gusta? (nombre y apellido): ")
+            for i in range(cant):
+                if(datos[i][0] == meGusta):
+                    '''POR HACER'''
+            
+            
 def editarDatos(x,datos):
     for i in range(5):
         print(datos[x][i])
     datoCambiar = -1         
     while(int(datoCambiar) != 0):
-        #imprime el submenu de a-editar datos personales
         print("\nQue dato quiere cambiar?\n\t1-Nombre\n\t2-Edad\n\t3-Sexo\n\t4-Biografia\n\t5-Hobbies\n\t(0)-salir")
         datoCambiar = input("Ingrese una opción: ")
         clearConsole()
@@ -155,7 +176,7 @@ def subMenu1(usuario,datosPersonales,estudiantesIngreso):
                 clearConsole()
                 inicializacion(cantEstudiantesActivos,cantModeradoresActivos,moderadorIngreso,estudiantesIngreso)
             
-def subMenu2(usuario,datosPersonales):
+def subMenu2(usuario,datosPersonales,cantEstudiantesActivos):
     clearConsole()
     opc2 = ""
     while(opc2 != "c"):
@@ -167,7 +188,7 @@ def subMenu2(usuario,datosPersonales):
             print("Opción invalida - Ingrese su opcion nuevamente\n")
         match opc2:
             case "a": 
-                cartel()
+                verCandidatos(datosPersonales,cantEstudiantesActivos)
             case "b": 
                 cartel()
 def subMenu3(usuario,datosPersonales):
@@ -218,7 +239,7 @@ def subMenu2Mod(usuario,moderadorIngreso):
             case "a": 
                 cartel()
                 
-def menuIterativo(usuario,datosPersonales,moderadorIngreso,estudiantesIngreso,modo):
+def menuIterativo(usuario,datosPersonales,moderadorIngreso,estudiantesIngreso,modo,cantEstudiantesActivos):
     if(modo == "estudiante"):
         opc = ""
         clearConsole()
@@ -235,7 +256,7 @@ def menuIterativo(usuario,datosPersonales,moderadorIngreso,estudiantesIngreso,mo
                     case 1:
                         subMenu1(usuario,datosPersonales,estudiantesIngreso)
                     case 2:
-                        subMenu2(usuario,datosPersonales)
+                        subMenu2(usuario,datosPersonales,cantEstudiantesActivos)
                     case 3:
                         subMenu3(usuario,datosPersonales)
                     case 4:
@@ -314,7 +335,7 @@ def cantidadMinimaNoCompletada(cEA,cMA):
     inicio = correcion(inicio)
     return inicio        
 
-def ingreso():
+def ingreso(cantEstudiantesActivos):
     estudianteActual = -1
     moderadorActual = -1
     clearConsole()        
@@ -333,13 +354,14 @@ def ingreso():
     
     if(estudianteActual != -1):
         modo = "estudiante"
-        menuIterativo(estudianteActual,datosPersonales,moderadorIngreso,estudiantesIngreso,modo)        
+        menuIterativo(estudianteActual,datosPersonales,moderadorIngreso,estudiantesIngreso,modo,cantEstudiantesActivos)        
     elif(moderadorActual != -1):
         modo = "moderador"
         menuIterativo(moderadorActual, datosPersonales,moderadorIngreso,estudiantesIngreso,modo)
     else:
         clearConsole()
         print("Intentalo mas tarde nuevamente")
+        
 def inicializacion(cantEstudiantesActivos,cantModeradoresActivos,moderadorIngreso,estudiantesIngreso):
     inicio = input("-LOGIN\n-REGISTRARSE\nIngrese su opcion:")
     inicio = inicio.upper()
@@ -378,6 +400,7 @@ def inicializacion(cantEstudiantesActivos,cantModeradoresActivos,moderadorIngres
             inicio = input("-LOGIN\n-REGISTRARSE\nIngrese su opcion:")
             inicio = inicio.upper()
             inicio = correcion(inicio)
-    ingreso()
+    ingreso(cantEstudiantesActivos)
+
         
 inicializacion(cantEstudiantesActivos,cantModeradoresActivos,moderadorIngreso,estudiantesIngreso)
