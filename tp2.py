@@ -3,7 +3,8 @@ import random
 import os
 from datetime import datetime
 
-matriz = [[random.randint(0,1)] * 7 for _ in range(7)]
+matriz = [[random.randint(0,1)for _ in range(8)] for _ in range(8)]
+likes = [[0]*7 for _ in range(7)]
 def clearConsole():
     if os.name in ('nt', 'dos'):
         command = 'cls'
@@ -21,45 +22,71 @@ moderadoresIngreso = [["moderador1@gmail.com","123","ACTIVO"],
                     ["2","2","ACTIVO"],
                     ["","",""],
                     ["","",""]]
+
 cantEstudiantesActivos = 5
 cantModeradoresActivos = 2
+
 datosPersonales = [["Lucas Michelini","2005-06-04","M","Rellenar","Progamacion competitiva,gimanasio,leer"],
-                   ["Francisco Iocco","15","M","Rellenar","Rellenar"],
-                   ["Sebastian Gonzales","14","M","Rellenar","Rellenar"],
-                   ["Joaquin Benitez","29","M","Rellenar","Rellenar"],
-                   ["","","","",""],
-                   ["","","","",""],
-                   ["","","","",""],
-                   ["","","","",""]]
-def verCandidatos(datos,cant):
-    for i in range(cant):
+                   ["Francisco Iocco","Vacio","Vacio","Vacio","Vacio"],
+                   ["Sebastian Gonzales","Vacio","Vacio","Vacio","Vacio"],
+                   ["Joaquin Benitez","Vacio","Vacio","Vacio","Vacio"],
+                   ["1","Vacio","Vacio","Vacio","Vacio"],
+                   ["Vacio","Vacio","Vacio","Vacio","Vacio"],
+                   ["Vacio","Vacio","Vacio","Vacio","Vacio"],
+                   ["Vacio","Vacio","Vacio","Vacio","Vacio"]]
+
+def mostrarEstudiantes():
+    for i in range(cantEstudiantesActivos):
         print("-----Estudiante",i,"------")
         for j in range(5):
-            print(datos[i][j])
+            print(datosPersonales[i][j])
+            
+def verCandidatos(usuario):
+    mostrarEstudiantes()
     matcheo = ""
     while matcheo != "NO":
-        matcheo = input("¿Quieres dar matcheo? (SI/NO): ")
+        matcheo = input("\n¿Quieres dar matcheo? (SI/NO): ")
+        matcheo = matcheo.upper()
+        
         if(matcheo != "SI" and matcheo != "NO"):
             clearConsole()
-            for i in range(cant):
+            for i in range(cantEstudiantesActivos):
                 print("-----Estudiante",i,"------")
                 for j in range(5):
-                    print(datos[i][j])
-            print("Opcion inválida.")
-        else:
+                    print(datosPersonales[i][j])
+            print("\nOpcion inválida.")
+        elif(matcheo == "SI"):
             clearConsole()
-            meGusta = input("¿Quien te gusta? (nombre y apellido): ")
-            for i in range(cant):
-                if(datos[i][0] == meGusta):
-                    '''POR HACER'''
-            
-            
-def editarDatos(x,datos):
-    for i in range(5):
-        if(datos[x][i]): print("-", datos[x][i])
-    datoCambiar = -1         
+            mostrarEstudiantes()
+            meGusta = input("\n¿Quien te gusta? (nombre y apellido): ")
+            existe = False
+            for i in range(cantEstudiantesActivos):
+                if(meGusta == datosPersonales[i][0]):
+                    existe = True
+            if(existe):
+                for i in range(cantEstudiantesActivos):
+                    if(datosPersonales[i][0] == meGusta and i != usuario):
+                        if(matriz[usuario][i] == 1):
+                            clearConsole()
+                            print("\nYa has dado like a este usuario\n")
+                        else:
+                            matriz[usuario][i] = 1
+                            clearConsole()
+                            print("Usuario likeado correctamente\n")
+                    elif(datosPersonales[i][0] == meGusta and i == usuario):
+                        clearConsole()
+                        print("No te puedes dar like a ti mismo\n")
+            else:
+                clearConsole()
+                print("Usuario Inexistente\n")
+
+
+def editarDatos(x):
+    datoCambiar=-1
     while(int(datoCambiar) != 0):
-        #imprime el submenu de a-editar datos personales
+        for i in range(5):
+            if(datosPersonales[x][i]): print("-", datosPersonales[x][i])
+        datoCambiar = -1         
         print("Que dato quiere cambiar?\n\t1-Nombre\n\t2-Edad\n\t3-Sexo\n\t4-Biografia\n\t5-Hobbies\n\t(0)-salir")
         datoCambiar = input("Ingrese una opción: ")
         clearConsole()
@@ -67,7 +94,7 @@ def editarDatos(x,datos):
             match int(datoCambiar):
                 case 1:
                     nuevoNombre = input("Ingrese su nuevo nombre: ")
-                    datos[x][0] = nuevoNombre
+                    datosPersonales[x][0] = nuevoNombre
                 case 2:
                     fechaN = input("ingrese su fecha de nacimiento (YYYY-MM-DD): ")
                     partes = fechaN.split("-")
@@ -80,24 +107,53 @@ def editarDatos(x,datos):
                         print("El formato de la fecha es inválido.")
                         fechaN = input("ingrese su fecha de nacimiento (YYYY-MM-DD): ")
                         partes = fechaN.split("-")
-                    datos[x][1] = fechaN
+                    datosPersonales[x][1] = fechaN
                 case 3:
                     nuevoSexo = input("ingrese su nuevo sexo: ")
-                    datos[x][2] = nuevoSexo
+                    datosPersonales[x][2] = nuevoSexo
                 case 4:
                     nuevaBiografia = input("ingrese su nueva biografia: ")
-                    datos[x][3] = nuevaBiografia
+                    datosPersonales[x][3] = nuevaBiografia
                 case 5:
                     nuevosHobbies = input("ingrese sus nuevo hobbies: ")
-                    datos[x][4] = nuevosHobbies
+                    datosPersonales[x][4] = nuevosHobbies
             clearConsole()
             print("La información se ha guardado correctamente!")
         else:
             clearConsole()
             print("Por favor, elija una opción del menu")
-    return datos
 
-def menuPrincipalE(x, estudiante):
+def eliminarDatos(x):
+    for i in range(3):
+        print(estudiantesIngreso[x][i])
+    confirm =input("\nSeguro que quiere eliminar este perfir[SI/NO]")
+    confirm = confirm.upper()
+    while(confirm != "SI" and confirm != "NO"):
+        print("Porfavor ingrese SI o no")
+        confirm =input("Seguro que quiere eliminar este perfir[SI/NO]")    
+        confirm = confirm.upper()
+    if(confirm == "SI"):
+        estudiantesIngreso[x][2] = "INACTIVO"
+        clearConsole()
+        print("Perfil eliminiado\n")
+        incializacion(cantEstudiantesActivos,cantModeradoresActivos)
+
+def reportesEstadisticos(usuario):
+    cont=0
+    cont2=0
+    cont3=0
+    for i in range(cantEstudiantesActivos):
+        if(matriz[usuario][i] == matriz[i][usuario]):
+            cont+=1
+        if(matriz[usuario][i] == 1 and matriz[i][usuario] == 0 ):
+            cont2+=1
+        if(matriz[usuario][i] == 0 and matriz[i][usuario] == 1 ):
+            cont3+=1
+    print("Haz hecho match con el",(cont*100)//cantEstudiantesActivos,"%\n")
+    print("Likes dados y no recibidos",cont2,"\n")
+    print("Likes recibidos y no dados",cont3,"\n")
+    
+def menuPrincipalE(x):
     print("MENU PRINCIPAL\n")
     print("1-Gestionar Perfil")
     print("2-Gestionar Canditos")
@@ -105,21 +161,24 @@ def menuPrincipalE(x, estudiante):
     print("4-Reportes estadisticos")
     print("0-Salir")
 
-def menuPrincipalM():
+def menuPrincipalM(usuario):
     print("1-Gestionar Usuario")
     print("2-Ver reportes")
     
-def menu1mod(x,moderador):
+def menu1mod(x):
     print("1-Gestionar Usuario")
     print("\ta.Desactivar Usuario")
     print("\tb.Volver")
     
-def menu2mod(x,moderador):
+def menu2mod(x):
     print("1-Gestionar Usuario")
     print("\ta.Ver reportes")
     print("\tb.Volver")
-        
-def subMenuE(opc, usuario, datosPersonales):
+    
+def cartel():
+    print("en construccion")
+    
+def subMenuE(opc, usuario):
     opc2 = ""
     while(opc2 != "c"):
         match int(opc):
@@ -140,23 +199,24 @@ def subMenuE(opc, usuario, datosPersonales):
                 print("\tc. Volver")
         opc2 = input("\nIngrese su opción: ")
         clearConsole()
+        
         if(opc2 != "a" and opc2 != "b" and opc2 !="c"): print("Opción invalida - Ingrese su opcion nuevamente\n")
         match int(opc):
             case 1: 
-                if(opc2 == "a"): editarDatos(usuario, datosPersonales)
-                else: ""
+                if(opc2 == "a"): editarDatos(usuario)
+                else: eliminarDatos(usuario)
             case 2:
-                if(opc == "a"): ""
-                else: ""
+                if(opc2 == "a"): verCandidatos(usuario)
+                else: cartel()
             case 3:
-                if(opc2 == "a"): ""
-                else: ""
+                if(opc2 == "a"): cartel()
+                else: cartel()
         clearConsole()
     
-def subMenu1Mod(usuario,moderadorIngreso):
+def subMenu1Mod(usuario):
     opc1 = ""
     while(opc1 != "b"):
-        menu1mod(usuario,moderadorIngreso)
+        menu1mod(usuario)
         opc1 = input("\nIngrese su opción: ")
         clearConsole()
         if(opc1 != "a" and opc1 != "b" ):
@@ -166,11 +226,11 @@ def subMenu1Mod(usuario,moderadorIngreso):
             case "a": 
                 cartel()
                 
-def subMenu2Mod(usuario,moderadorIngreso):
+def subMenu2Mod(usuario):
     clearConsole()
     opc2 = ""
     while(opc2 != "b"):
-        menu2mod(usuario,moderadorIngreso)
+        menu2mod(usuario)
         opc2 = input("\nIngrese su opción: ")
         clearConsole()
         if(opc2 != "a" and opc2 != "b" ):
@@ -180,27 +240,28 @@ def subMenu2Mod(usuario,moderadorIngreso):
             case "a": 
                 cartel()
                 
-def menuIterativo(usuario, datosPersonales, modo):
+def menuIterativo(usuario, modo):
+    clearConsole()
     opc = ""
     if(modo == 0):
         while(opc != '0'):
-            menuPrincipalE(usuario,datosPersonales)
+            menuPrincipalE(usuario)
             opc = input("\nIngrese su opción: ")
             clearConsole()
             if(not(opc.isdigit()) or not(int(opc) >= 0 and int(opc) <= 4)): print("\nPor favor, ingrese un opción valida.\n")
-            elif(opc == "4"): print("4-Reportes estadisticos\n\tEn construcción...")
+            elif(opc == "4"): reportesEstadisticos(usuario)
             elif(opc == "0"): print("Gracias por usar nuestro programa!")
-            else: subMenuE(opc, usuario, datosPersonales)
+            else: subMenuE(opc, usuario)
     if(modo == 1):
         while(opc != '0'):
-            menuPrincipalM(usuario,moderadorIngreso)
+            menuPrincipalM(usuario)
             opc = input("\nIngrese su opción: ")
             clearConsole()
             if(not(opc.isdigit()) or not(int(opc) >= 0 and int(opc) <= 4)): print("\nPor favor, ingrese un opción valida.\n")
             else:
                 match int(opc):
-                    case 1: subMenu1Mod(usuario,moderadorIngreso)
-                    case 2: subMenu2Mod(usuario,moderadorIngreso)
+                    case 1: subMenu1Mod(usuario)
+                    case 2: subMenu2Mod(usuario)
     
 def registrar(baseDePerfiles,nuevoUsuario,tipoUsuario):
     if(tipoUsuario == 1):
@@ -224,18 +285,22 @@ def registrar(baseDePerfiles,nuevoUsuario,tipoUsuario):
             baseDePerfiles[nuevoUsuario][1] = contrasena
             baseDePerfiles[nuevoUsuario][2] = "ACTIVO"
             return baseDePerfiles
-    
+        
 def login(email, contrasena):
     perfilID = -1
-    modo = -1
+    modo = -1 
     for i in range(8):
         if(email == estudiantesIngreso[i][0] and contrasena == estudiantesIngreso[i][1] and estudiantesIngreso[i][2] == "ACTIVO"):
             perfilID = i
             modo = 0
+            menuIterativo(perfilID,modo)
         if(i < 4 and (email == moderadoresIngreso[i][0] and contrasena == moderadoresIngreso[i][1])):
             perfilID = i
             modo = 1
-    return [perfilID, modo]
+            menuIterativo(perfilID,modo)
+    
+    return perfilID
+
     
 def correcion(inicio):
     while(inicio != "LOGIN" and inicio != "REGISTRARSE"):
@@ -251,57 +316,63 @@ def cantidadMinimaNoCompletada(cEA,cMA):
     inicio = correcion(inicio)
     return inicio        
 
-inicio = input("-LOGIN\n-REGISTRARSE\nIngrese su opcion:").upper()
-inicio = correcion(inicio)
-          
-while(inicio != "LOGIN" or (cantEstudiantesActivos <4 and cantModeradoresActivos < 1)):
-    if(inicio == "LOGIN"):
-        clearConsole()
-        inicio = cantidadMinimaNoCompletada(cantEstudiantesActivos,cantModeradoresActivos)
-    else:
-        tipoDeUsuarioARegistrar = 0
-        while(tipoDeUsuarioARegistrar == 0):
+def ingreso():
+    clearConsole()
+    email = input("Ingrese su email: ")
+    contrasena = input("ingrese su contraseña: ")
+    contIntentos = 1
+    perfilID = login(email, contrasena)
+    while(contIntentos < 3 and perfilID == -1):
+        if(perfilID == -1):
+            contIntentos += 1
             clearConsole()
-            tipoDeUsuarioARegistrar = int(input("1-Estudiante\n2-Moderador\nOpcion: "))
-            if(tipoDeUsuarioARegistrar == 1):
-                if(cantEstudiantesActivos < 8):
-                    estudiantesIngreso == registrar(estudiantesIngreso,cantEstudiantesActivos,tipoDeUsuarioARegistrar)
-                    cantEstudiantesActivos += 1
-                    clearConsole()
-                    print("Usuario ingresado correctamente")
-                else:
-                    print("Cantidad maxima de alumnos alcanzada")
-            elif(tipoDeUsuarioARegistrar == 2):
-                if(cantModeradoresActivos < 4):
-                    moderadorIngreso = registrar(moderadorIngreso,cantModeradoresActivos,tipoDeUsuarioARegistrar)
-                    cantModeradoresActivos += 1
-                    clearConsole()
-                    print("Usuario ingresado correctamente")
-                else:
-                    clearConsole()
-                    print("Cantidad maxima de moderadores alcanzada")
-            elif(tipoDeUsuarioARegistrar != 1 and tipoDeUsuarioARegistrar != 2):
-                tipoDeUsuarioARegistrar = 0
-                print("opcion no valida\n")
-                
-        inicio = input("-LOGIN\n-REGISTRARSE\nIngrese su opcion:")
-        inicio = inicio.upper()
-        inicio = correcion(inicio)
-        
-clearConsole()
-email = input("Ingrese su email: ")
-contrasena = input("ingrese su contraseña: ")
-contIntentos = 1
-datosOperador = login(email, contrasena)
-while(contIntentos < 3 and datosOperador[0]  == -1):
-    if(datosOperador[0] == -1):
-        contIntentos += 1
-        clearConsole()
-        print("Email o contraseña no encontrados")
-        email = input("Ingrese su email: ")
-        contrasena = input("ingrese su contraseña: ")
-        datosOperador = login(email, contrasena)
+            print("Email o contraseña no encontrados")
+            email = input("Ingrese su email: ")
+            contrasena = input("ingrese su contraseña: ")
+            perfilID = login(email, contrasena)
+        elif(perfilID ==-2):
+            print("")
+            
+    clearConsole()
+    if(perfilID == -1): print("Limite de intetos superado")
 
-clearConsole()
-if(datosOperador[0] != -1): menuIterativo(datosOperador[0], datosPersonales, datosOperador[1])
-else: print("Intentalo mas tarde nuevamente")
+def incializacion(cantEstudiantesActivos,cantModeradoresActivos):
+    inicio = input("-LOGIN\n-REGISTRARSE\nIngrese su opcion:").upper()
+    inicio = correcion(inicio)
+
+    while(inicio != "LOGIN" or (cantEstudiantesActivos <4 and cantModeradoresActivos < 1)):
+        if(inicio == "LOGIN"):
+            clearConsole()
+            inicio = cantidadMinimaNoCompletada(cantEstudiantesActivos,cantModeradoresActivos)
+        else:
+            tipoDeUsuarioARegistrar = 0
+            while(tipoDeUsuarioARegistrar == 0):
+                clearConsole()
+                tipoDeUsuarioARegistrar = int(input("1-Estudiante\n2-Moderador\nOpcion: "))
+                if(tipoDeUsuarioARegistrar == 1):
+                    if(cantEstudiantesActivos < 8):
+                        estudiantesIngreso == registrar(estudiantesIngreso,cantEstudiantesActivos,tipoDeUsuarioARegistrar)
+                        cantEstudiantesActivos += 1
+                        clearConsole()
+                        print("Usuario ingresado correctamente")
+                    else:
+                        print("Cantidad maxima de alumnos alcanzada")
+                elif(tipoDeUsuarioARegistrar == 2):
+                    if(cantModeradoresActivos < 4):
+                        moderadoresIngreso = registrar(moderadoresIngreso,cantModeradoresActivos,tipoDeUsuarioARegistrar)
+                        cantModeradoresActivos += 1
+                        clearConsole()
+                        print("Usuario ingresado correctamente")
+                    else:
+                        clearConsole()
+                        print("Cantidad maxima de moderadores alcanzada")
+                elif(tipoDeUsuarioARegistrar != 1 and tipoDeUsuarioARegistrar != 2):
+                    tipoDeUsuarioARegistrar = 0
+                    print("opcion no valida\n")
+
+            inicio = input("-LOGIN\n-REGISTRARSE\nIngrese su opcion:")
+            inicio = inicio.upper()
+            inicio = correcion(inicio)
+            
+    ingreso()
+incializacion(cantEstudiantesActivos,cantModeradoresActivos)
