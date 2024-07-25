@@ -11,7 +11,7 @@ def clearConsole():
     os.system(command)
 clearConsole()
 estudiantesIngreso = [["lucas","123","ACTIVO"],
-                      ["franciscoiocco@gmail.com","123","ACTIVO"],
+                      ["pepe","123","ACTIVO"],
                       ["sebastiangonzales@gmail.com","123","ACTIVO"],
                       ["joaquinbenitez@gmail.com","123","ACTIVO"],
                       ["1","1","ACTIVO"],
@@ -27,14 +27,14 @@ cantEstudiantesActivos = 5
 cantModeradoresActivos = 2
 
 datosPersonales = [["Lucas Michelini","2005-06-04","M","Rellenar","Progamacion competitiva,gimanasio,leer"],
-                   ["Francisco Iocco","Vacio","Vacio","Vacio","Vacio"],
+                   ["pepe","Vacio","Vacio","Vacio","Vacio"],
                    ["Sebastian Gonzales","Vacio","Vacio","Vacio","Vacio"],
                    ["Joaquin Benitez","Vacio","Vacio","Vacio","Vacio"],
                    ["1","Vacio","Vacio","Vacio","Vacio"],
                    ["Vacio","Vacio","Vacio","Vacio","Vacio"],
                    ["Vacio","Vacio","Vacio","Vacio","Vacio"],
                    ["Vacio","Vacio","Vacio","Vacio","Vacio"]]
-
+reportes =[""]*8
 def mostrarEstudiantes():
     for i in range(cantEstudiantesActivos):
         print("-----Estudiante",i,"------")
@@ -47,6 +47,7 @@ def verCandidatos(usuario):
     while matcheo != "NO":
         matcheo = input("\n¿Quieres dar matcheo? (SI/NO): ")
         matcheo = matcheo.upper()
+        clearConsole()
         
         if(matcheo != "SI" and matcheo != "NO"):
             clearConsole()
@@ -90,7 +91,7 @@ def editarDatos(x):
         print("Que dato quiere cambiar?\n\t1-Nombre\n\t2-Edad\n\t3-Sexo\n\t4-Biografia\n\t5-Hobbies\n\t(0)-salir")
         datoCambiar = input("Ingrese una opción: ")
         clearConsole()
-        if(datoCambiar.isdigit() and int(datoCambiar) >= 1 and int(datoCambiar) <= 5):
+        if(datoCambiar.isdigit() and int(datoCambiar) >= 0 and int(datoCambiar) <= 5):
             match int(datoCambiar):
                 case 1:
                     nuevoNombre = input("Ingrese su nuevo nombre: ")
@@ -118,7 +119,8 @@ def editarDatos(x):
                     nuevosHobbies = input("ingrese sus nuevo hobbies: ")
                     datosPersonales[x][4] = nuevosHobbies
             clearConsole()
-            print("La información se ha guardado correctamente!")
+            if(datoCambiar != '0'):
+                print("La información se ha guardado correctamente!")
         else:
             clearConsole()
             print("Por favor, elija una opción del menu")
@@ -128,10 +130,12 @@ def eliminarDatos(x):
         print(estudiantesIngreso[x][i])
     confirm =input("\nSeguro que quiere eliminar este perfir[SI/NO]")
     confirm = confirm.upper()
+    clearConsole()
     while(confirm != "SI" and confirm != "NO"):
         print("Porfavor ingrese SI o no")
         confirm =input("Seguro que quiere eliminar este perfir[SI/NO]")    
         confirm = confirm.upper()
+        clearConsole()
     if(confirm == "SI"):
         estudiantesIngreso[x][2] = "INACTIVO"
         clearConsole()
@@ -149,9 +153,43 @@ def reportesEstadisticos(usuario):
             cont2+=1
         if(matriz[usuario][i] == 0 and matriz[i][usuario] == 1 ):
             cont3+=1
-    print("Haz hecho match con el",(cont*100)//cantEstudiantesActivos,"%\n")
-    print("Likes dados y no recibidos",cont2,"\n")
-    print("Likes recibidos y no dados",cont3,"\n")
+    print("-Haz hecho match con el",(cont*100)//cantEstudiantesActivos,"%")
+    print("-Likes dados y no recibidos",cont2)
+    print("-Likes recibidos y no dados",cont3,"\n")
+    
+def crearReporte(denunciante, reportado):
+    clearConsole()
+    motivo = input("Ingrese el motivo de su reporte: ")
+    if(reportes[denunciante] == ""):
+        reportes[denunciante] = f"ID del reportante: {denunciante} -ID del reportado: {reportado} - {motivo} -Estado 0."
+    else:
+        reportes[denunciante] += f"\nID del reportante: {denunciante} -ID del reportado: {reportado} -{motivo} -Estado 0."
+    
+    
+def reportarEstudiante(usuario):
+    for i in range(cantEstudiantesActivos):
+        print(f"{i}-{datosPersonales[i][0]}")
+    reportado = input("\nID o nombre del usuario reportado: ")
+    digito = reportado.isdigit()
+    if(not(digito)):
+        i = 0
+        while(datosPersonales[i][0] != reportado and i <= 7):
+            i+=1
+        reportado = i
+    if(int(reportado)<=7 and int(reportado) != usuario):
+        crearReporte(usuario,reportado)
+        clearConsole()
+        print(reportes[usuario],"\n")
+    elif(int(reportado) == usuario):
+        clearConsole()
+        print("No te podes reportar a vos mismo\n")
+    else:
+        clearConsole()
+        print("Usuario a reportar no encontrado\n")
+            
+        
+      
+        
     
 def menuPrincipalE(x):
     print("MENU PRINCIPAL\n")
@@ -204,14 +242,15 @@ def subMenuE(opc, usuario):
         match int(opc):
             case 1: 
                 if(opc2 == "a"): editarDatos(usuario)
-                else: eliminarDatos(usuario)
+                elif(opc2 == "b"): eliminarDatos(usuario)
             case 2:
+                clearConsole()
                 if(opc2 == "a"): verCandidatos(usuario)
-                else: cartel()
+                elif(opc2 == "b"): reportarEstudiante(usuario)
             case 3:
                 if(opc2 == "a"): cartel()
-                else: cartel()
-        clearConsole()
+                elif(opc2 == "b"): cartel()
+        
     
 def subMenu1Mod(usuario):
     opc1 = ""
