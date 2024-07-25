@@ -59,4 +59,4 @@ def subMenu2Mod(usuario, moderadorIngreso):
             clearConsole()
             print("Opción inválida - Ingrese su opción nuevamente\n")
         elif opc2 == "a":
-            verReportes()
+            verReportes()

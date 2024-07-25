@@ -34,7 +34,16 @@ datosPersonales = [["Lucas Michelini","2005-06-04","M","Rellenar","Progamacion c
                    ["Vacio","Vacio","Vacio","Vacio","Vacio"],
                    ["Vacio","Vacio","Vacio","Vacio","Vacio"],
                    ["Vacio","Vacio","Vacio","Vacio","Vacio"]]
-reportes =[""]*8
+reportes = [[-1,0,-1,-1,-1,-1,-1,-1],
+            [-1,-1, 0,-1,-1,-1,-1,-1],
+            [-1,-1,-1,-1,-1,-1,1,-1],
+            [-1,-1,-1,-1,-1,-1,-1,-1],
+            [-1,2,-1,-1,-1,-1,-1,-1],
+            [-1,-1,-1,-1,-1,-1,-1,-1],
+            [-1,-1,-1,-1,-1,-1,-1,-1],
+            [-1,-1,-1,-1,-1,0,-1,-1]]
+motivos = [[""]*8]*8
+
 def mostrarEstudiantes():
     for i in range(cantEstudiantesActivos):
         print("-----Estudiante",i,"------")
@@ -80,7 +89,6 @@ def verCandidatos(usuario):
             else:
                 clearConsole()
                 print("Usuario Inexistente\n")
-
 
 def editarDatos(x):
     datoCambiar=-1
@@ -161,11 +169,12 @@ def crearReporte(denunciante, reportado):
     clearConsole()
     motivo = input("Ingrese el motivo de su reporte: ")
     if(reportes[denunciante] == ""):
-        reportes[denunciante] = f"ID del reportante: {denunciante} -ID del reportado: {reportado} - {motivo} -Estado 0."
+        reportes[denunciante][reportado] = 0
+        motivoReportes[denunciante][reportado] = motivo
+        print(f"ID del reportante: {denunciante} -ID del reportado: {reportado} - {motivo} -Estado 0.")
     else:
         reportes[denunciante] += f"\nID del reportante: {denunciante} -ID del reportado: {reportado} -{motivo} -Estado 0."
-    
-    
+     
 def reportarEstudiante(usuario):
     for i in range(cantEstudiantesActivos):
         print(f"{i}-{datosPersonales[i][0]}")
@@ -186,10 +195,6 @@ def reportarEstudiante(usuario):
     else:
         clearConsole()
         print("Usuario a reportar no encontrado\n")
-            
-        
-      
-        
     
 def menuPrincipalE(x):
     print("MENU PRINCIPAL\n")
@@ -209,7 +214,7 @@ def menu1mod(x):
     print("\tb.Volver")
     
 def menu2mod(x):
-    print("1-Gestionar Usuario")
+    print("1-Gestionar Reportes")
     print("\ta.Ver reportes")
     print("\tb.Volver")
     
@@ -250,20 +255,40 @@ def subMenuE(opc, usuario):
             case 3:
                 if(opc2 == "a"): cartel()
                 elif(opc2 == "b"): cartel()
-        
-    
+
+def idEstudiante(nombre):
+    i = 0
+    while(estudiantesIngreso[i][0] != nombre): i+=1
+    if(estudiantesIngreso[i][0] == nombre): return i
+    return -1            
+
 def subMenu1Mod(usuario):
-    opc1 = ""
-    while(opc1 != "b"):
+    opc = ""
+    while(opc != "b"):
         menu1mod(usuario)
-        opc1 = input("\nIngrese su opción: ")
+        opc = input("\nIngrese su opción: ")
         clearConsole()
-        if(opc1 != "a" and opc1 != "b" ):
+        if(opc != "a" and opc != "b"):
             clearConsole()
             print("Opción invalida - Ingrese su opcion nuevamente\n")
-        match opc1:
-            case "a": 
-                cartel()
+        if(opc == "a"):
+            encontrado = False
+            while(not(encontrado)):
+                clearConsole()
+                for i in range(8):
+                    if(estudiantesIngreso[i][0]):       
+                        print("ID:", i)
+                        print("Nombre:", estudiantesIngreso[i][0])
+                        print("Estado:", estudiantesIngreso[i][2], "\n")
+                opc2 = input("Ingrese el ID o el nombre del usuario a eliminar: ")
+                if(not(opc2.isdigit()) and idEstudiante(int(opc2)) != -1):
+                    eliminarDatos(idEstudiante(int(opc2)))
+                    encontrado = True
+                elif(opc2.isdigit() and int(opc2) >= 0 and int(opc2) <= 7):
+                    eliminarDatos(int(opc2))  
+                    encontrado = True              
+                else:
+                    print("Por favor, ingrese un ID o nombre válido.")
                 
 def subMenu2Mod(usuario):
     clearConsole()
@@ -275,10 +300,22 @@ def subMenu2Mod(usuario):
         if(opc2 != "a" and opc2 != "b" ):
             clearConsole()
             print("Opción invalida - Ingrese su opcion nuevamente\n")
-        match opc2:
-            case "a": 
-                cartel()
-                
+        if(opc2 == "a"):
+            for i in range(8):
+                for j in range(7):
+                    if(reportes[i][j] == 0 and estudiantesIngreso[i][2] == "ACTIVO" and estudiantesIngreso[j][2] == "ACTIVO"):
+                        clearConsole()
+                        print(f"ID del reportante: {i}\nID del reportado: {j}\nMotivo: {motivos[i][j]}.\n")
+                        opc2 = input("1- Ignorar reporte | 2- Bloquear al reportante: ")
+                        if(not(opc2.isdigit()) and int(opc2) != 1 and int(opc2) != 2):
+                            print("Por favor, ingrese una opción válida.")
+                        elif(int(opc2) == 1):
+                            reportes[i][j] = 2
+                        else:
+                            reportes[i][j] = 1
+                            estudiantesIngreso[j][2] == "INACTIVO"
+    clearConsole()
+            
 def menuIterativo(usuario, modo):
     clearConsole()
     opc = ""
