@@ -2,6 +2,7 @@
 import random
 import os
 from datetime import datetime
+from math import factorial
 
 matriz = [[random.randint(0,1)for _ in range(8)] for _ in range(8)]
 likes = [[0]*7 for _ in range(7)]
@@ -11,13 +12,14 @@ def clearConsole():
     os.system(command)
 clearConsole()
 estudiantesIngreso = [["lucas","123","ACTIVO"],
-                      ["pepe","123","INACTIVO"],
+                      ["pepe","123","ACTIVO"],
                       ["sebastiangonzales@gmail.com","123","ACTIVO"],
                       ["joaquinbenitez@gmail.com","123","ACTIVO"],
                       ["1","1","ACTIVO"],
-                      ["","","INACTIVO"],
-                      ["","","INACTIVO"],
-                      ["","","INACTIVO"]]
+                      ["","","ACTIVO"],
+                      ["","","ACTIVO"],
+                      ["","","ACTIVO"]]
+
 moderadoresIngreso = [["moderador1@gmail.com","123","ACTIVO"],
                     ["2","2","ACTIVO"],
                     ["","",""],
@@ -56,32 +58,35 @@ def registrar(nuevoUsuario,tipoUsuario):
 
 def login(email, contrasena):
     perfilID = -1
-    modo = -1 
+    modo = -1
+    salirDelMenu = False 
     for i in range(8):
         if(email == estudiantesIngreso[i][0] and 
            contrasena == estudiantesIngreso[i][1] and 
            estudiantesIngreso[i][2] == "ACTIVO"):
             perfilID = i
             modo = 0
-            menuIterativo(perfilID,modo)
+            salirDelMenu = menuIterativo(perfilID,modo)
         if(i < 4 and (email == moderadoresIngreso[i][0] and
                       contrasena == moderadoresIngreso[i][1])):
             perfilID = i
             modo = 1
             menuIterativo(perfilID,modo)
+    if(salirDelMenu):
+        return salirDelMenu
     return perfilID
 
 
 def correcion(inicio):
-    while(inicio != "LOGIN" and inicio != "REGISTRARSE" and inicio != "SALIR"):
+    while(inicio != "LOGIN" and inicio != "REGISTRARSE" and inicio != "SALIR" and inicio != '1' and inicio != '2'):
         clearConsole()
         print("Opcion no valida\nporfavor ingrese una de las siguientes opciones")
-        inicio = input("-LOGIN\n-REGISTRARSE\n-SALIR\nIngrese su opcion: ").upper()
+        inicio = input("-LOGIN\n-REGISTRARSE\n-SALIR\n-1)Bonus Track 1\n-2)Bonus Track 2\nIngrese su opcion: ").upper()
     return inicio
 
 def cantidadMinimaNoCompletada(cEA,cMA):
     print("Necesita haber un minimo de [",cEA,"/4] estudiantes y [",cMA,"/1] modereadores")
-    inicio = input("-LOGIN\n-REGISTRARSE\nIngrese su opcion:")
+    inicio = input("-LOGIN\n-REGISTRARSE\n-SALIR\n-1)Bonus Track 1\n-2)Bonus Track 2\nIngrese su opcion: ").upper()
     inicio = inicio.upper()
     inicio = correcion(inicio)
     return inicio        
@@ -103,12 +108,14 @@ def ingreso():
 
 cantEstudiantesActivos = 0
 cantModeradoresActivos = 0
+
 def contarEstudiantes():
     global cantEstudiantesActivos
     i = 0
-    while(i <= 8 and estudiantesIngreso[i][2] == "ACTIVO"):
+    
+    while(i < 8 and estudiantesIngreso[i][2] == "ACTIVO"):
         i +=1
-    cantEstudiantesActivos = i+1
+    cantEstudiantesActivos = i
 
 def ordenarEstudiantes():
     for i in range(8):
@@ -122,21 +129,40 @@ def ordenarEstudiantes():
             if(j<8):
                 estudiantesIngreso[i] = estudiantesIngreso[j]
                 estudiantesIngreso[j] = listaT
-    
-                
-def incializacion():
+    contarEstudiantes()
+
+def edades():
+    clearConsole()
+    edades = [21, 18, 20, 19, 23, 24]
+    for i in range(6):
+        for j in range(i+1, 5):
+            if(edades[i] > edades[j]):
+                temp = edades[i]
+                edades[i] = edades[j]
+                edades[j] = temp
+    clearConsole()
+    for i in range(5):
+        if(edades[i]+1 != edades[i+1]):
+            print("El elemento (edad) faltante es:", edades[i]+1,"\n")
+def bonus2():
+    ordenarEstudiantes()
+    posiciones = (cantEstudiantesActivos*cantEstudiantesActivos)-cantEstudiantesActivos
+    numerador = factorial(posiciones)
+    denominador = factorial(2) * factorial((posiciones-2))
+    posibleMatcheo = numerador // denominador
+    clearConsole()
+    print(f"La posibles matcheos son: {posibleMatcheo}\n")
+               
+def incializacion(inicio):
     global cantEstudiantesActivos
     global cantModeradoresActivos
     ordenarEstudiantes()
-    contarEstudiantes()
-    inicio = input("-LOGIN\n-REGISTRARSE\n-SALIR\nIngrese su opcion: ").upper()
-    inicio = correcion(inicio)
-
-    while((inicio != "LOGIN" and inicio != "SALIR")or (cantEstudiantesActivos <4 and cantModeradoresActivos < 1)):
+    while((inicio != "LOGIN" and inicio != "SALIR" and inicio != '1' and inicio != '2')or (cantEstudiantesActivos <4 and cantModeradoresActivos < 1)):
         if(inicio == "LOGIN"):
             clearConsole()
             inicio = cantidadMinimaNoCompletada(cantEstudiantesActivos,cantModeradoresActivos)
-        else:
+        elif(inicio == "REGISTRARSE"):
+            ordenarEstudiantes()
             tipoDeUsuarioARegistrar = 0
             while(tipoDeUsuarioARegistrar == 0):
                 clearConsole()
@@ -148,6 +174,7 @@ def incializacion():
                         clearConsole()
                         print("Usuario ingresado correctamente")
                     else:
+                        clearConsole()
                         print("Cantidad maxima de alumnos alcanzada")
                 elif(tipoDeUsuarioARegistrar == 2):
                     if(cantModeradoresActivos < 4):
@@ -162,19 +189,34 @@ def incializacion():
                     tipoDeUsuarioARegistrar = 0
                     print("opcion no valida\n")
 
-            inicio = input("-LOGIN\n-REGISTRARSE\n-SALIR\nIngrese su opcion:")
+            inicio = input("-LOGIN\n-REGISTRARSE\n-SALIR\n-1)Bonus Track 1\n-2)Bonus Track 2\nIngrese su opcion: ").upper()
             inicio = inicio.upper()
             inicio = correcion(inicio)
             
-            
-    perfilID = ingreso()
+    if(inicio == '1'):
+        edades()
+        return True
+    elif(inicio == '2'):
+        bonus2()
+        return True
+    elif(inicio == "SALIR"):
+        clearConsole()
+        print("Gracias por usar nuestro progama")
+        return False
+    if(inicio ==  "LOGIN"):
+        perfilID = ingreso()
+        
     if(perfilID == -1): 
         clearConsole()
         print("\nLimite de intetos superado")
+        return False
+    elif(perfilID == True):
+        return True
     if(inicio == "SALIR"):
         clearConsole()
         print("Gracias por usar nuestro progama")
-    
+        return False
+
     
 reportes = [[-1,0,-1,-1,-1,-1,-1,-1],
             [-1,-1, 0,-1,-1,-1,-1,-1],
@@ -185,6 +227,7 @@ reportes = [[-1,0,-1,-1,-1,-1,-1,-1],
             [-1,-1,-1,-1,-1,-1,-1,-1],
             [-1,-1,-1,-1,-1,0,-1,-1]]
 motivos = [[""]*8]*8
+
 
 def mostrarEstudiantes():
     for i in range(cantEstudiantesActivos):
@@ -275,22 +318,6 @@ def editarDatos(x):
             clearConsole()
             print("Por favor, elija una opción del menu")
 
-def eliminarDatos(x):
-    for i in range(3):
-        print(estudiantesIngreso[x][i])
-    confirm =input("\nSeguro que quiere eliminar este perfir[SI/NO]")
-    confirm = confirm.upper()
-    clearConsole()
-    while(confirm != "SI" and confirm != "NO"):
-        print("Porfavor ingrese SI o no")
-        confirm =input("Seguro que quiere eliminar este perfir[SI/NO]")    
-        confirm = confirm.upper()
-        clearConsole()
-    if(confirm == "SI"):
-        estudiantesIngreso[x][2] = "INACTIVO"
-        clearConsole()
-        print("Perfil eliminiado\n")
-        incializacion()
 
 def reportesEstadisticos(usuario):
     cont=0
@@ -363,61 +390,6 @@ def menu2mod(x):
 def cartel():
     print("en construccion")
     
-def subMenuE(opc, usuario):
-    opc2 = ""
-    while(opc2 != "c"):
-        match int(opc):
-            case 1: 
-                print("1-Gestionar Perfil")
-                print("\ta.Editar mis datos personales")
-                print("\tb.Eliminar mi perfil")
-                print("\tc.volver")
-            case 2:
-                print("2-Gestionar candidatos")
-                print("\ta. Ver candidatos")
-                print("\tb. Reportar un candidato")
-                print("\tc. Volver")
-            case 3:
-                print("3-Matcheos")
-                print("\ta. Ver matcheos")
-                print("\tb. Eliminar un matcheo")
-                print("\tc. Volver")
-        opc2 = input("\nIngrese su opción: ")
-        clearConsole()    
-        if(opc2 != "a" and opc2 != "b" and opc2 !="c"): print("Opción invalida - Ingrese su opcion nuevamente\n")
-        match int(opc):
-            case 1: 
-                if(opc2 == "a"): editarDatos(usuario)
-                elif(opc2 == "b"): eliminarDatos(usuario)
-            case 2:
-                clearConsole()
-                if(opc2 == "a"): verCandidatos(usuario)
-                elif(opc2 == "b"): reportarEstudiante(usuario)
-            case 3:
-                if(opc2 == "a"): cartel()
-                elif(opc2 == "b"): cartel()
-def subMenuM(opc, usuario):
-    opc2 = ""
-    while(opc2 != "b"):
-        match int(opc):
-            case 1:
-                print("1-Gestionar Usuario")
-                print("\ta.Desactivar Usuario")
-                print("\tb.Volver")
-            case 2:
-                print("1-Gestionar Usuario")
-                print("\ta.Ver reportes")
-                print("\tb.Volver")
-        opc2 = input("\nIngrese su opción: ")
-        clearConsole()
-        if(opc2 != "a" and opc2 != "b" and opc2 !="c"): print("Opción invalida - Ingrese su opcion nuevamente\n")
-        match int(opc):
-            case 1:
-                if(opc2 == "a"): desactivarUsuario()
-            case 2:
-                clearConsole()
-                if(opc2 == "a"): verReportes()
-                
 def idEstudiante(nombre):
     i = 0
     while(estudiantesIngreso[i][0] != nombre): i+=1
@@ -457,26 +429,110 @@ def desactivarUsuario():
             encontrado = True
         else:
             print("Por favor, ingrese un ID o nombre válido.")
+def eliminarDatos(x):
+    for i in range(3):
+        print(estudiantesIngreso[x][i])
+    confirm =input("\nSeguro que quiere eliminar este perfir[SI/NO]")
+    confirm = confirm.upper()
+    clearConsole()
+    while(confirm != "SI" and confirm != "NO"):
+        print("Porfavor ingrese SI o no")
+        confirm =input("Seguro que quiere eliminar este perfir[SI/NO]")    
+        confirm = confirm.upper()
+        clearConsole()
+    if(confirm == "SI"):
+        estudiantesIngreso[x][2] = "INACTIVO"
+        clearConsole()
+        print("Perfil eliminiado\n")
+        ordenarEstudiantes
+        return True
             
+def subMenuE(opc, usuario,salirDelMenu):
+    opc2 = ""
+    while(opc2 != "c" and not(salirDelMenu)):
+        match int(opc):
+            case 1: 
+                print("1-Gestionar Perfil")
+                print("\ta.Editar mis datos personales")
+                print("\tb.Eliminar mi perfil")
+                print("\tc.volver")
+            case 2:
+                print("2-Gestionar candidatos")
+                print("\ta. Ver candidatos")
+                print("\tb. Reportar un candidato")
+                print("\tc. Volver")
+            case 3:
+                print("3-Matcheos")
+                print("\ta. Ver matcheos")
+                print("\tb. Eliminar un matcheo")
+                print("\tc. Volver")
+        opc2 = input("\nIngrese su opción: ")
+        clearConsole()    
+        if(opc2 != "a" and opc2 != "b" and opc2 !="c"): print("Opción invalida - Ingrese su opcion nuevamente\n")
+        match int(opc):
+            case 1: 
+                if(opc2 == "a"): editarDatos(usuario)
+                elif(opc2 == "b"): salirDelMenu = eliminarDatos(usuario)
+            case 2:
+                clearConsole()
+                if(opc2 == "a"): verCandidatos(usuario)
+                elif(opc2 == "b"): reportarEstudiante(usuario)
+            case 3:
+                if(opc2 == "a"): cartel()
+                elif(opc2 == "b"): cartel()
+    if(salirDelMenu):
+        return salirDelMenu
+                
+def subMenuM(opc, usuario):
+    opc2 = ""
+    while(opc2 != "b"):
+        match int(opc):
+            case 1:
+                print("1-Gestionar Usuario")
+                print("\ta.Desactivar Usuario")
+                print("\tb.Volver")
+            case 2:
+                print("1-Gestionar Usuario")
+                print("\ta.Ver reportes")
+                print("\tb.Volver")
+        opc2 = input("\nIngrese su opción: ")
+        clearConsole()
+        if(opc2 != "a" and opc2 != "b" and opc2 !="c"): print("Opción invalida - Ingrese su opcion nuevamente\n")
+        match int(opc):
+            case 1:
+                if(opc2 == "a"): desactivarUsuario()
+            case 2:
+                clearConsole()
+                if(opc2 == "a"): verReportes()
+                
 def menuIterativo(usuario, modo):
     clearConsole()
     opc = ""
+    salirDelMenu = False
     if(modo == 0):
-        while(opc != '0'):
+        while(opc != '0' and not(salirDelMenu)):
             menuPrincipalE(usuario)
             opc = input("\nIngrese su opción: ")
             clearConsole()
             if(not(opc.isdigit()) or not(int(opc) >= 0 and int(opc) <= 4)): print("\nPor favor, ingrese un opción valida.\n")
             elif(opc == "4"): reportesEstadisticos(usuario)
-            elif(opc == "0"): incializacion(cantEstudiantesActivos,cantModeradoresActivos)
-            else: subMenuE(opc, usuario)
+            elif(opc == "0"): salirDelMenu = True
+            else: salirDelMenu = subMenuE(opc, usuario, salirDelMenu)
     if(modo == 1):
         while(opc != '0'):
             menuPrincipalM(usuario)
             opc = input("\nIngrese su opción: ")
             clearConsole()
             if(not(opc.isdigit()) or not(int(opc) >= 0 and int(opc) <= 2)): print("\nPor favor, ingrese un opción valida.\n")
-            elif(opc == "0"): incializacion(cantEstudiantesActivos,cantModeradoresActivos)
+            elif(opc == "0"): salirDelMenu = True
             else: subMenuM(opc, usuario)
+    if(salirDelMenu):
+        return salirDelMenu
     
-incializacion()
+prendido = True
+while(prendido):
+    inicio = input("-LOGIN\n-REGISTRARSE\n-SALIR\n-1)Bonus Track 1\n-2)Bonus Track 2\nIngrese su opcion: ").upper()
+    inicio = correcion(inicio)
+    prendido = incializacion(inicio)
+    
+ 

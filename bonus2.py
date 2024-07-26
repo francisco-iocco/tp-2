@@ -6,7 +6,6 @@ def bonus2():
     numerador = factorial(posiciones)
     denominador = factorial(2) * factorial((posiciones-2))
     posibleMatcheo = numerador // denominador
-    return posibleMatcheo
+    print(posibleMatcheo)
 
-print(bonus2())
 
