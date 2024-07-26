@@ -14,11 +14,11 @@ clearConsole()
 estudiantesIngreso = [["lucas","123","ACTIVO"],
                       ["pepe","123","ACTIVO"],
                       ["sebastiangonzales@gmail.com","123","ACTIVO"],
-                      ["joaquinbenitez@gmail.com","123","ACTIVO"],
-                      ["1","1","ACTIVO"],
-                      ["","","ACTIVO"],
-                      ["","","ACTIVO"],
-                      ["","","ACTIVO"]]
+                      ["","","INACTIVO"],
+                      ["","","INACTIVO"],
+                      ["","","INACTIVO"],
+                      ["","","INACTIVO"],
+                      ["","","INACTIVO"]]
 
 moderadoresIngreso = [["moderador1@gmail.com","123","ACTIVO"],
                     ["2","2","ACTIVO"],
@@ -40,11 +40,12 @@ def registrar(nuevoUsuario,tipoUsuario):
             clearConsole()
             print("MENU DE REGISTRO")
             email = input("Ingrese su email: ")
-
             contrasena = input("ingrese su contraseña: ")
             estudiantesIngreso[nuevoUsuario][0] = email
             estudiantesIngreso[nuevoUsuario][1] = contrasena
             estudiantesIngreso[nuevoUsuario][2] = "ACTIVO"
+            for i in range(5):
+                datosPersonales[nuevoUsuario][i] = "Vacio"
     elif(tipoUsuario == 2):
         if(nuevoUsuario <= 3):
             clearConsole()
@@ -122,13 +123,17 @@ def ordenarEstudiantes():
         if(estudiantesIngreso[i][2] == "INACTIVO"):
             cambio = False
             j=i
-            listaT = ["","",""]
-            listaT = estudiantesIngreso[i]
+            listaTEmail = ["","",""]
+            listaTDatos = ["","",""]
+            listaTEmail = estudiantesIngreso[i]
+            listaTDatos = datosPersonales[i]
             while(j <= 7 and estudiantesIngreso[j][2]!="ACTIVO"):
                 j+=1
             if(j<8):
                 estudiantesIngreso[i] = estudiantesIngreso[j]
-                estudiantesIngreso[j] = listaT
+                datosPersonales[i] = datosPersonales[j]
+                estudiantesIngreso[j] = listaTEmail
+                datosPersonales[j] = listaTDatos
     contarEstudiantes()
 
 def edades():
