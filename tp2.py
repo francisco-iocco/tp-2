@@ -34,15 +34,8 @@ datosPersonales = [["Lucas Michelini","2005-06-04","M","Rellenar","Progamacion c
                    ["Vacio","Vacio","Vacio","Vacio","Vacio"],
                    ["Vacio","Vacio","Vacio","Vacio","Vacio"],
                    ["Vacio","Vacio","Vacio","Vacio","Vacio"]]
-reportes = [[-1,0,-1,-1,-1,-1,-1,-1],
-            [-1,-1, 0,-1,-1,-1,-1,-1],
-            [-1,-1,-1,-1,-1,-1,1,-1],
-            [-1,-1,-1,-1,-1,-1,-1,-1],
-            [-1,2,-1,-1,-1,-1,-1,-1],
-            [-1,-1,-1,-1,-1,-1,-1,-1],
-            [-1,-1,-1,-1,-1,-1,-1,-1],
-            [-1,-1,-1,-1,-1,0,-1,-1]]
-motivos = [[""]*8]*8
+reportes = [[-1]*8 for _ in range(8)]
+motivos = [[""]*8  for _ in range(8)]
 
 def mostrarEstudiantes():
     for i in range(cantEstudiantesActivos):
@@ -133,6 +126,20 @@ def editarDatos(x):
             clearConsole()
             print("Por favor, elija una opción del menu")
 
+def edades():
+    clearConsole()
+    edades = [21, 18, 20, 19, 23, 24]
+    for i in range(6):
+        for j in range(i+1, 5):
+            if(edades[i] > edades[j]):
+                temp = edades[i]
+                edades[i] = edades[j]
+                edades[j] = temp
+    for i in range(5):
+        if(edades[i]+1 != edades[i+1]):
+            print("El elemento (edad) faltante es:", edades[i]+1)
+                
+
 def eliminarDatos(x):
     for i in range(3):
         print(estudiantesIngreso[x][i])
@@ -168,13 +175,10 @@ def reportesEstadisticos(usuario):
 def crearReporte(denunciante, reportado):
     clearConsole()
     motivo = input("Ingrese el motivo de su reporte: ")
-    if(reportes[denunciante] == ""):
-        reportes[denunciante][reportado] = 0
-        motivoReportes[denunciante][reportado] = motivo
-        print(f"ID del reportante: {denunciante} -ID del reportado: {reportado} - {motivo} -Estado 0.")
-    else:
-        reportes[denunciante] += f"\nID del reportante: {denunciante} -ID del reportado: {reportado} -{motivo} -Estado 0."
-     
+    reportes[denunciante][reportado] = 0
+    motivos[denunciante][reportado] = motivo
+    print(f"ID del reportante: {denunciante} -ID del reportado: {reportado} - {motivo} -Estado 0.")
+        
 def reportarEstudiante(usuario):
     for i in range(cantEstudiantesActivos):
         print(f"{i}-{datosPersonales[i][0]}")
@@ -186,7 +190,7 @@ def reportarEstudiante(usuario):
             i+=1
         reportado = i
     if(int(reportado)<=7 and int(reportado) != usuario):
-        crearReporte(usuario,reportado)
+        crearReporte(usuario,int(reportado))
         clearConsole()
         print(reportes[usuario],"\n")
     elif(int(reportado) == usuario):
@@ -330,8 +334,7 @@ def menuIterativo(usuario, modo):
             clearConsole()
             if(not(opc.isdigit()) or not(int(opc) >= 0 and int(opc) <= 4)): print("\nPor favor, ingrese un opción valida.\n")
             elif(opc == "4"): reportesEstadisticos(usuario)
-            elif(opc == "0"): print("Gracias por usar nuestro programa!")
-            else: subMenuE(opc, usuario)
+            elif(int(opc) >= 1 and int(opc) <= 4): subMenuE(opc, usuario)
     if(modo == 1):
         while(opc != '0'):
             menuPrincipalM(usuario)
@@ -380,13 +383,12 @@ def login(email, contrasena):
             menuIterativo(perfilID,modo)
     
     return perfilID
-
-    
+  
 def correcion(inicio):
-    while(inicio != "LOGIN" and inicio != "REGISTRARSE"):
+    while(inicio != "LOGIN" and inicio != "REGISTRARSE" and inicio != "SALIR" and inicio != "3"):
         clearConsole()
         print("Opcion no valida\nporfavor ingrese una de las siguientes opciones")
-        inicio = input("-LOGIN\n-REGISTRARSE\nIngrese su opcion:").upper()
+        inicio = input("-LOGIN\n-REGISTRARSE\n-SALIR\nIngrese su opcion:").upper()
     return inicio
 
 def cantidadMinimaNoCompletada(cEA,cMA):
@@ -417,42 +419,48 @@ def ingreso():
     if(perfilID == -1): print("Limite de intetos superado")
 
 def incializacion(cantEstudiantesActivos,cantModeradoresActivos):
-    inicio = input("-LOGIN\n-REGISTRARSE\nIngrese su opcion:").upper()
+    inicio = input("-LOGIN\n-REGISTRARSE\n3- Bonus Track 1: edades\n-SALIR\nIngrese su opcion:").upper()
     inicio = correcion(inicio)
-
-    while(inicio != "LOGIN" or (cantEstudiantesActivos <4 and cantModeradoresActivos < 1)):
-        if(inicio == "LOGIN"):
-            clearConsole()
-            inicio = cantidadMinimaNoCompletada(cantEstudiantesActivos,cantModeradoresActivos)
-        else:
-            tipoDeUsuarioARegistrar = 0
-            while(tipoDeUsuarioARegistrar == 0):
+    
+    if(inicio == "3"): edades()
+    elif(inicio == "SALIR"): return True
+    else:
+        while(inicio != "LOGIN" or (cantEstudiantesActivos <4 and cantModeradoresActivos < 1)):
+            if(inicio == "LOGIN"):
                 clearConsole()
-                tipoDeUsuarioARegistrar = int(input("1-Estudiante\n2-Moderador\nOpcion: "))
-                if(tipoDeUsuarioARegistrar == 1):
-                    if(cantEstudiantesActivos < 8):
-                        estudiantesIngreso == registrar(estudiantesIngreso,cantEstudiantesActivos,tipoDeUsuarioARegistrar)
-                        cantEstudiantesActivos += 1
-                        clearConsole()
-                        print("Usuario ingresado correctamente")
-                    else:
-                        print("Cantidad maxima de alumnos alcanzada")
-                elif(tipoDeUsuarioARegistrar == 2):
-                    if(cantModeradoresActivos < 4):
-                        moderadoresIngreso = registrar(moderadoresIngreso,cantModeradoresActivos,tipoDeUsuarioARegistrar)
-                        cantModeradoresActivos += 1
-                        clearConsole()
-                        print("Usuario ingresado correctamente")
-                    else:
-                        clearConsole()
-                        print("Cantidad maxima de moderadores alcanzada")
-                elif(tipoDeUsuarioARegistrar != 1 and tipoDeUsuarioARegistrar != 2):
-                    tipoDeUsuarioARegistrar = 0
-                    print("opcion no valida\n")
+                inicio = cantidadMinimaNoCompletada(cantEstudiantesActivos,cantModeradoresActivos)
+            else:
+                tipoDeUsuarioARegistrar = 0
+                while(tipoDeUsuarioARegistrar == 0):
+                    clearConsole()
+                    tipoDeUsuarioARegistrar = int(input("1-Estudiante\n2-Moderador\nOpcion: "))
+                    if(tipoDeUsuarioARegistrar == 1):
+                        if(cantEstudiantesActivos < 8):
+                            estudiantesIngreso == registrar(estudiantesIngreso,cantEstudiantesActivos,tipoDeUsuarioARegistrar)
+                            cantEstudiantesActivos += 1
+                            clearConsole()
+                            print("Usuario ingresado correctamente")
+                        else:
+                            print("Cantidad maxima de alumnos alcanzada")
+                    elif(tipoDeUsuarioARegistrar == 2):
+                        if(cantModeradoresActivos < 4):
+                            moderadoresIngreso = registrar(moderadoresIngreso,cantModeradoresActivos,tipoDeUsuarioARegistrar)
+                            cantModeradoresActivos += 1
+                            clearConsole()
+                            print("Usuario ingresado correctamente")
+                        else:
+                            clearConsole()
+                            print("Cantidad maxima de moderadores alcanzada")
+                    elif(tipoDeUsuarioARegistrar != 1 and tipoDeUsuarioARegistrar != 2):
+                        tipoDeUsuarioARegistrar = 0
+                        print("opcion no valida\n")
+                inicio = input("-LOGIN\n-REGISTRARSE\nIngrese su opcion:")
+                inicio = inicio.upper()
+                inicio = correcion(inicio)    
+        ingreso()
 
-            inicio = input("-LOGIN\n-REGISTRARSE\nIngrese su opcion:")
-            inicio = inicio.upper()
-            inicio = correcion(inicio)
-            
-    ingreso()
-incializacion(cantEstudiantesActivos,cantModeradoresActivos)
+salir = False  
+while(not(salir)):
+    salir = incializacion(cantEstudiantesActivos,cantModeradoresActivos)
+clearConsole()
+print("Gracias por usar nuestro programa!")
