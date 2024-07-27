@@ -25,7 +25,6 @@ moderadoresIngreso = [["moderador1@gmail.com","123","ACTIVO"],
                     ["","",""],
                     ["","",""]]
 
-
 datosPersonales = [["Lucas Michelini","2005-06-04","M","Rellenar","Progamacion competitiva,gimanasio,leer"],
                    ["pepe","Vacio","Vacio","Vacio","Vacio"],
                    ["Sebastian Gonzales","Vacio","Vacio","Vacio","Vacio"],
@@ -221,18 +220,9 @@ def incializacion(inicio):
         clearConsole()
         print("Gracias por usar nuestro progama")
         return False
-
     
-reportes = [[-1,0,-1,-1,-1,-1,-1,-1],
-            [-1,-1, 0,-1,-1,-1,-1,-1],
-            [-1,-1,-1,-1,-1,-1,1,-1],
-            [-1,-1,-1,-1,-1,-1,-1,-1],
-            [-1,2,-1,-1,-1,-1,-1,-1],
-            [-1,-1,-1,-1,-1,-1,-1,-1],
-            [-1,-1,-1,-1,-1,-1,-1,-1],
-            [-1,-1,-1,-1,-1,0,-1,-1]]
-motivos = [[""]*8]*8
-
+reportes = [[-1]*8 for _ in range(8)]
+motivos = [[""]*8 for _ in range(8)]
 
 def mostrarEstudiantes():
     for i in range(cantEstudiantesActivos):
@@ -342,12 +332,8 @@ def reportesEstadisticos(usuario):
 def crearReporte(denunciante, reportado):
     clearConsole()
     motivo = input("Ingrese el motivo de su reporte: ")
-    if(reportes[denunciante] == ""):
-        reportes[denunciante][reportado] = 0
-        motivoReportes[denunciante][reportado] = motivo
-        print(f"ID del reportante: {denunciante} -ID del reportado: {reportado} - {motivo} -Estado 0.")
-    else:
-        reportes[denunciante] += f"\nID del reportante: {denunciante} -ID del reportado: {reportado} -{motivo} -Estado 0."
+    reportes[denunciante][reportado] = 0
+    motivos[denunciante][reportado] = motivo
      
 def reportarEstudiante(usuario):
     for i in range(cantEstudiantesActivos):
@@ -360,9 +346,9 @@ def reportarEstudiante(usuario):
             i+=1
         reportado = i
     if(int(reportado)<=7 and int(reportado) != usuario):
-        crearReporte(usuario,reportado)
+        crearReporte(usuario,int(reportado))
         clearConsole()
-        print(reportes[usuario],"\n")
+        print(f"ID del reportante: {usuario} -ID del reportado: {reportado} - {motivos[usuario][int(reportado)]} -Estado 0.")
     elif(int(reportado) == usuario):
         clearConsole()
         print("No te podes reportar a vos mismo\n")
@@ -539,5 +525,3 @@ while(prendido):
     inicio = input("-LOGIN\n-REGISTRARSE\n-SALIR\n-1)Bonus Track 1\n-2)Bonus Track 2\nIngrese su opcion: ").upper()
     inicio = correcion(inicio)
     prendido = incializacion(inicio)
-    
- 
